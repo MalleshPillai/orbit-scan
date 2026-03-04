@@ -1,4 +1,4 @@
-import { Employee, ZoneSession, ActivityLog, ZoneName } from '@/types/rfid';
+import { Employee, ZoneSession, ActivityLog } from '@/types/rfid';
 
 export const employees: Employee[] = [
   { id: '1', name: 'Arun Sharma', rfidId: 'RF-1001', department: 'Engineering' },

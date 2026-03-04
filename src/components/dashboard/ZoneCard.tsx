@@ -4,19 +4,19 @@ import { Users, Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const zoneStyles: Record<string, { border: string; bg: string; dot: string; icon: string }> = {
-  Workspace: {
+  zone-workspace: {
     border: 'border-zone-workspace/30',
     bg: 'bg-zone-workspace-light',
     dot: 'bg-zone-workspace',
     icon: 'text-zone-workspace',
   },
-  Canteen: {
+  zone-canteen: {
     border: 'border-zone-canteen/30',
     bg: 'bg-zone-canteen-light',
     dot: 'bg-zone-canteen',
     icon: 'text-zone-canteen',
   },
-  Lobby: {
+  zone-lobby: {
     border: 'border-zone-lobby/30',
     bg: 'bg-zone-lobby-light',
     dot: 'bg-zone-lobby',
@@ -24,12 +24,19 @@ const zoneStyles: Record<string, { border: string; bg: string; dot: string; icon
   },
 };
 
+const defaultStyle = {
+  border: 'border-primary/30',
+  bg: 'bg-primary/5',
+  dot: 'bg-primary',
+  icon: 'text-primary',
+};
+
 interface ZoneCardProps {
   zone: ZoneInfo;
 }
 
 export function ZoneCard({ zone }: ZoneCardProps) {
-  const style = zoneStyles[zone.name];
+  const style = zoneStyles[zone.color] ?? defaultStyle;
 
   return (
     <Card className={cn('relative overflow-hidden border-2 transition-shadow hover:shadow-lg', style.border)}>

@@ -3,8 +3,9 @@ import { useTheme } from 'next-themes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useRFID } from '@/context/RFIDContext';
-import { Wifi, LogOut, Moon, Sun, Radio } from 'lucide-react';
+import { Wifi, LogOut, Moon, Sun } from 'lucide-react';
 
 export function NavBar() {
   const [time, setTime] = useState(new Date());
@@ -18,17 +19,9 @@ export function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-sm">
-      <div className="container flex h-16 items-center justify-between gap-4">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <Radio className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="hidden text-lg font-bold tracking-tight sm:inline-block">
-            SmartZone
-          </span>
-        </div>
-
+      <div className="flex h-14 items-center gap-2 px-4 lg:px-6">
+        <SidebarTrigger className="-ml-1" />
+        <div className="flex-1 flex items-center justify-between gap-4">
         {/* Live Clock */}
         <div className="font-mono text-sm tabular-nums text-muted-foreground">
           {time.toLocaleTimeString('en-US', { hour12: true })}
@@ -54,6 +47,7 @@ export function NavBar() {
           <Button variant="ghost" size="icon" className="text-muted-foreground">
             <LogOut className="h-4 w-4" />
           </Button>
+        </div>
         </div>
       </div>
     </header>

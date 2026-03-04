@@ -1,4 +1,5 @@
-export type ZoneName = 'Workspace' | 'Canteen' | 'Lobby';
+/** Built-in zone names; custom workplaces use arbitrary strings */
+export type ZoneName = 'Workspace' | 'Canteen' | 'Lobby' | (string & {});
 
 export interface Employee {
   id: string;
@@ -9,7 +10,7 @@ export interface Employee {
 
 export interface ZoneSession {
   employeeId: string;
-  zone: ZoneName;
+  zone: string;
   entryTime: Date;
   exitTime?: Date;
   status: 'active' | 'left';
@@ -19,14 +20,15 @@ export interface ActivityLog {
   id: string;
   timestamp: Date;
   employeeId: string;
-  fromZone: ZoneName | 'Outside';
-  toZone: ZoneName | 'Outside';
+  fromZone: string;
+  toZone: string;
 }
 
 export interface ZoneInfo {
-  name: ZoneName;
+  name: string;
   readerStatus: 'online' | 'offline';
   occupantCount: number;
+  /** Tailwind/CSS class or variable name, e.g. zone-workspace, zone-canteen */
   color: string;
 }
 

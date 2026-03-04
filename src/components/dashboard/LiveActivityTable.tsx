@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRFID } from '@/context/RFIDContext';
-import { ZoneName } from '@/types/rfid';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -15,13 +14,17 @@ function formatDuration(ms: number) {
 }
 
 const CANTEEN_LIMIT_MS = 45 * 60 * 1000;
+const zoneBadgeClass: Record<string, string> = {
+  Workspace: 'border-zone-workspace/40 text-zone-workspace',
+  Canteen: 'border-zone-canteen/40 text-zone-canteen',
+  Lobby: 'border-zone-lobby/40 text-zone-lobby',
+};
 
 export function LiveActivityTable() {
-  const { sessions, getEmployeeById } = useRFID();
-  const [filter, setFilter] = useState<'All' | ZoneName>('All');
+  const { sessions, getEmployeeById, zones } = useRFID();
+  const [filter, setFilter] = useState<string>('All');
   const [, setTick] = useState(0);
 
-  // Force re-render every second for live timers
   useEffect(() => {
     const interval = setInterval(() => setTick(t => t + 1), 1000);
     return () => clearInterval(interval);
@@ -35,12 +38,23 @@ export function LiveActivityTable() {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl font-semibold">Live Activity</h2>
-        <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
-          <TabsList>
+        <Tabs value={filter} onValueChange={setFilter}>
+          <TabsList className="flex-wrap">
             <TabsTrigger value="All">All</TabsTrigger>
-            <TabsTrigger value="Workspace" className="data-[state=active]:text-zone-workspace">Workspace</TabsTrigger>
-            <TabsTrigger value="Canteen" className="data-[state=active]:text-zone-canteen">Canteen</TabsTrigger>
-            <TabsTrigger value="Lobby" className="data-[state=active]:text-zone-lobby">Lobby</TabsTrigger>
+            {zones.map((z) => (
+              <TabsTrigger
+                key={z.name}
+                value={z.name}
+                className={cn(
+                  z.color === 'zone-workspace' && 'data-[state=active]:text-zone-workspace',
+                  z.color === 'zone-canteen' && 'data-[state=active]:text-zone-canteen',
+                  z.color === 'zone-lobby' && 'data-[state=active]:text-zone-lobby',
+                  !['zone-workspace', 'zone-canteen', 'zone-lobby'].includes(z.color) && 'data-[state=active]:text-primary'
+                )}
+              >
+                {z.name}
+              </TabsTrigger>
+            ))}
           </TabsList>
         </Tabs>
       </div>
@@ -79,15 +93,7 @@ export function LiveActivityTable() {
                     <TableCell className="font-medium">{employee.name}</TableCell>
                     <TableCell className="font-mono text-sm text-muted-foreground">{employee.rfidId}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant="secondary"
-                        className={cn(
-                          session.zone === 'Workspace' && 'border-zone-workspace/40 text-zone-workspace',
-                          session.zone === 'Canteen' && 'border-zone-canteen/40 text-zone-canteen',
-                          session.zone === 'Lobby' && 'border-zone-lobby/40 text-zone-lobby',
-                          'border'
-                        )}
-                      >
+                      <Badge variant="secondary" className={cn(zoneBadgeClass[session.zone] ?? 'border-primary/40 text-primary', 'border')}>
                         {session.zone}
                       </Badge>
                     </TableCell>
