@@ -4,19 +4,19 @@ import { Users, Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const zoneStyles: Record<string, { border: string; bg: string; dot: string; icon: string }> = {
-  zone-workspace: {
+  'zone-workspace': {
     border: 'border-zone-workspace/30',
     bg: 'bg-zone-workspace-light',
     dot: 'bg-zone-workspace',
     icon: 'text-zone-workspace',
   },
-  zone-canteen: {
+  'zone-canteen': {
     border: 'border-zone-canteen/30',
     bg: 'bg-zone-canteen-light',
     dot: 'bg-zone-canteen',
     icon: 'text-zone-canteen',
   },
-  zone-lobby: {
+  'zone-lobby': {
     border: 'border-zone-lobby/30',
     bg: 'bg-zone-lobby-light',
     dot: 'bg-zone-lobby',
