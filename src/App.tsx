@@ -9,6 +9,8 @@ import { AppLayout } from "@/components/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import AddEmployee from "./pages/AddEmployee";
 import Workplaces from "./pages/Workplaces";
+import Activity from "./pages/Activity";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/employees/new" element={<AddEmployee />} />
                 <Route path="/workplaces" element={<Workplaces />} />
+                <Route path="/activity" element={<Activity />} />
+                <Route path="/settings" element={<Settings />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

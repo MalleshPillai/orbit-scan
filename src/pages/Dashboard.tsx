@@ -13,22 +13,25 @@ const chartConfig = {
 };
 
 export default function Dashboard() {
-  const { zones, totalPresent, employees } = useRFID();
+  const { zones, totalPresent, employees, sessions } = useRFID();
 
   const zoneChartData = zones.map((z) => ({ name: z.name, count: z.occupantCount }));
+  const activeSessions = sessions.filter((s) => s.status === 'active');
 
   return (
     <div className="min-h-full bg-gradient-to-b from-muted/30 to-background">
       {/* Hero / Stats strip */}
-      <div className="border-b bg-card/50 backdrop-blur-sm">
+      <div className="border-b bg-card/60 backdrop-blur-sm">
         <div className="container py-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Dashboard</h1>
-              <p className="text-muted-foreground mt-1">Real-time zone presence and activity.</p>
+              <h1 className="text-2xl font-bold tracking-tight md:text-3xl">SmartZone overview</h1>
+              <p className="text-muted-foreground mt-1">
+                High-level snapshot of employees, workplaces and live presence.
+              </p>
             </div>
             <div className="flex flex-wrap gap-4">
-              <Card className="min-w-[140px] border-2 bg-background/80">
+              <Card className="min-w-[160px] border-2 bg-background/90">
                 <CardContent className="flex items-center gap-3 p-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                     <Users className="h-5 w-5 text-primary" />
@@ -39,7 +42,7 @@ export default function Dashboard() {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="min-w-[140px] border-2 bg-background/80">
+              <Card className="min-w-[160px] border-2 bg-background/90">
                 <CardContent className="flex items-center gap-3 p-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zone-workspace/20">
                     <Radio className="h-5 w-5 text-zone-workspace" />
@@ -50,7 +53,7 @@ export default function Dashboard() {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="min-w-[140px] border-2 bg-background/80">
+              <Card className="min-w-[160px] border-2 bg-background/90">
                 <CardContent className="flex items-center gap-3 p-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zone-lobby/20">
                     <MapPin className="h-5 w-5 text-zone-lobby" />
@@ -100,25 +103,62 @@ export default function Dashboard() {
           </Card>
         )}
 
+        {/* Live snapshot + zones */}
+        <div className="grid gap-8 xl:grid-cols-5">
+          <section className="space-y-4 xl:col-span-3">
+            <Card className="border-2">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-xl font-semibold">Live snapshot</h2>
+                    <p className="text-sm text-muted-foreground">
+                      Who&apos;s currently checked in and where.
+                    </p>
+                  </div>
+                  <NavLink
+                    to="/activity"
+                    className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    Open full activity
+                  </NavLink>
+                </div>
+                <LiveActivityTable />
+              </CardContent>
+            </Card>
+          </section>
+
+          <section className="space-y-4 xl:col-span-2">
+            <Card className="border-2">
+              <CardContent className="pt-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Quick signal</h2>
+                  <span className="text-xs uppercase tracking-wide text-muted-foreground">
+                    {activeSessions.length} active session{activeSessions.length === 1 ? '' : 's'}
+                  </span>
+                </div>
+                <ActivityLog />
+              </CardContent>
+            </Card>
+          </section>
+        </div>
+
         {/* Zone cards */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">Zones</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Workplaces</h2>
+            <NavLink
+              to="/workplaces"
+              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Manage workplaces
+            </NavLink>
+          </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {zones.map((zone) => (
               <ZoneCard key={zone.name} zone={zone} />
             ))}
           </div>
         </section>
-
-        {/* Live Activity + Activity Log */}
-        <div className="grid gap-8 lg:grid-cols-5">
-          <section className="lg:col-span-3">
-            <LiveActivityTable />
-          </section>
-          <section className="lg:col-span-2">
-            <ActivityLog />
-          </section>
-        </div>
       </div>
     </div>
   );
